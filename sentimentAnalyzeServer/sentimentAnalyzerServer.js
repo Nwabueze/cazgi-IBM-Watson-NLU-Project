@@ -7,7 +7,7 @@ const cors_app = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 
-function getNLUInstance(){
+function getNLUInstance(type,typeval){
     let api_key = process.env.API_KEY;
     let api_url = process.env.API_URL;
     const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1');
@@ -16,13 +16,13 @@ function getNLUInstance(){
     const naturalLanguageUnderstanding = new NaturalLanguageUnderstandingV1({
         version: '2021-03-25',
         authenticator: new IamAuthenticator({
-          apikey: '{apikey}',
+          apikey: api_key,
         }),
-        serviceUrl: '{url}'
+        serviceUrl: api_url /*'{url}'*/
     });
 
     const analyzeParams = {
-        'text': text,
+        type: typeval,
         'features': {
             'categories': {
                 'limit': 3
@@ -51,19 +51,27 @@ app.get("/",(req,res)=>{
 
 app.get("/url/emotion", (req,res) => {
 
-    return res.send({"happy":"90","sad":"10"});
+    //return res.send({"happy":"90","sad":"10"});
+    let data = getNLUInstance('url', req.query.url);
+    return res.send(data);
 });
 
 app.get("/url/sentiment", (req,res) => {
-    return res.send("url sentiment for "+req.query.url);
+    //return res.send("url sentiment for "+req.query.url);
+    let data = getNLUInstance('url', req.query.url);
+    return res.send(data);
 });
 
 app.get("/text/emotion", (req,res) => {
-    return res.send({"happy":"10","sad":"90"});
+    //return res.send({"happy":"10","sad":"90"});
+    let data = getNLUInstance('text', req.query.text);
+    return res.send(data);
 });
 
 app.get("/text/sentiment", (req,res) => {
-    return res.send("text sentiment for "+req.query.text);
+    //return res.send("text sentiment for "+req.query.text);
+    let data = getNLUInstance('text', req.query.text);
+    return res.send(data);
 });
 
 let server = app.listen(8080, () => {
