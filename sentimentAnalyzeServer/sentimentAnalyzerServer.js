@@ -37,9 +37,11 @@ function getNLUInstance(type,typeval){
     .catch(err => {
         console.log('error:', err);
     });
-
-    return naturalLanguageUnderstanding;
+    
+    return analysisResults;
 }
+
+
 
 
 
@@ -47,6 +49,8 @@ app.use(cors_app());
 
 app.get("/",(req,res)=>{
     res.render('index.html');
+    //let data = getNLUInstance("text","who are you");
+    //res.send(data);
   });
 
 app.get("/url/emotion", (req,res) => {
@@ -57,7 +61,7 @@ app.get("/url/emotion", (req,res) => {
 });
 
 app.get("/url/sentiment", (req,res) => {
-    //return res.send("url sentiment for "+req.query.url);
+    return res.send("url sentiment for "+req.query.url);
     let data = getNLUInstance('url', req.query.url);
     return res.send(data);
 });
